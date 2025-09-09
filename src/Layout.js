@@ -4,6 +4,8 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import Dashboard from "./Pages/Dashboard";
 import Sidebar from "./Components/Common/SideBar";
 import Users from "./Components/Users";
+import AdminServices from "./Components/Services";
+import ProgramsAdmin from "./Components/Program";
 
 
 
@@ -25,6 +27,10 @@ const Layout = () => {
         <Routes>
           <Route path="/overview" element={<Dashboard />} />
           <Route path="/users" element={<Users />} />
+          <Route path="/service" element={<AdminServices />} />
+          <Route path="/programs" element={<ProgramsAdmin />} />
+
+
 
           
          
