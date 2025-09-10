@@ -6,6 +6,10 @@ import Sidebar from "./Components/Common/SideBar";
 import Users from "./Components/Users";
 import AdminServices from "./Components/Services";
 import ProgramsAdmin from "./Components/Program";
+import AdminUserStories from "./Components/AdminUserStory";
+import AdminPricing from "./Components/AdminPricing";
+import AdminCenters from "./Components/AdminCenters";
+import AdminSports from "./Components/AdminSports";
 
 
 
@@ -29,6 +33,16 @@ const Layout = () => {
           <Route path="/users" element={<Users />} />
           <Route path="/service" element={<AdminServices />} />
           <Route path="/programs" element={<ProgramsAdmin />} />
+          <Route path="/story" element={<AdminUserStories />} />
+          <Route path="/pricing" element={<AdminPricing />} />
+          <Route path="/centers" element={<AdminCenters />} />
+          <Route path="/sports" element={<AdminSports />} />
+
+
+
+
+
+
 
 
 
