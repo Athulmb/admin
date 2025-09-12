@@ -1,6 +1,6 @@
+// src/pages/Admin/AdminSports.jsx
 import React, { useState, useEffect } from "react";
-
-const API = "http://localhost:7000/api/sports";
+import { SPORTS_API, BASE_URL } from "../config"; // use config.js
 
 const AdminSports = () => {
   const [sports, setSports] = useState([]);
@@ -8,14 +8,16 @@ const AdminSports = () => {
   const [image, setImage] = useState(null);
   const [editId, setEditId] = useState(null);
 
+  const token = localStorage.getItem("token");
+
   // ✅ Fetch Sports
   const fetchSports = async () => {
     try {
-      const res = await fetch(API, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      const res = await fetch(SPORTS_API, {
+        headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
-      if (data.success) setSports(data.sports);
+      if (data.success) setSports(data.sports || []);
     } catch (err) {
       console.error("Fetch error:", err);
     }
@@ -28,18 +30,17 @@ const AdminSports = () => {
   // ✅ Create or Update
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const formData = new FormData();
       formData.append("title", title);
       if (image) formData.append("image", image);
 
       const method = editId ? "PUT" : "POST";
-      const url = editId ? `${API}/${editId}` : API;
+      const url = editId ? `${SPORTS_API}/${editId}` : SPORTS_API;
 
       const res = await fetch(url, {
         method,
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
 
@@ -48,7 +49,7 @@ const AdminSports = () => {
         fetchSports();
         resetForm();
       } else {
-        alert(data.message);
+        alert(data.message || "Something went wrong");
       }
     } catch (err) {
       console.error("Save error:", err);
@@ -58,15 +59,14 @@ const AdminSports = () => {
   // ✅ Delete
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this sport?")) return;
-
     try {
-      const res = await fetch(`${API}/${id}`, {
+      const res = await fetch(`${SPORTS_API}/${id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
       if (data.success) fetchSports();
-      else alert(data.message);
+      else alert(data.message || "Failed to delete");
     } catch (err) {
       console.error("Delete error:", err);
     }
@@ -96,7 +96,6 @@ const AdminSports = () => {
         <h3 className="text-xl font-semibold mb-4 text-green-300">
           {editId ? "✏️ Edit Sport" : "➕ Add New Sport"}
         </h3>
-
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <input
             type="text"
@@ -142,7 +141,7 @@ const AdminSports = () => {
           >
             {sport.image ? (
               <img
-                src={`http://localhost:7000${sport.image}`}
+                src={`${BASE_URL}${sport.image}`}
                 alt={sport.title}
                 className="w-full h-40 object-cover"
               />
@@ -153,7 +152,6 @@ const AdminSports = () => {
             )}
             <div className="p-4">
               <h3 className="text-lg font-semibold text-green-300">{sport.title}</h3>
-
               <div className="flex gap-3 mt-4">
                 <button
                   onClick={() => handleEdit(sport)}

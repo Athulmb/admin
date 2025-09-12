@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Eye, Pencil, Trash2, X, Plus } from "lucide-react";
-
-const API = "http://localhost:7000/api/programs";
-const BASE_URL = "http://localhost:7000";
+import { PROGRAMS_API, BASE_URL } from "../config"; // updated import
 
 const subtitleOptions = [
   "7 Week · 5x/week",
@@ -30,7 +28,7 @@ const AdminPrograms = () => {
 
   const fetchPrograms = async () => {
     try {
-      const res = await fetch(API);
+      const res = await fetch(PROGRAMS_API);
       const data = await res.json();
       setPrograms(data.programs || data.data);
     } catch (err) {
@@ -76,7 +74,7 @@ const AdminPrograms = () => {
         body: formData,
       };
 
-      const res = await fetch(editId ? `${API}/${editId}` : API, options);
+      const res = await fetch(editId ? `${PROGRAMS_API}/${editId}` : PROGRAMS_API, options);
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Error occurred");
 
@@ -107,7 +105,7 @@ const AdminPrograms = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this program?")) return;
     try {
-      const res = await fetch(`${API}/${id}`, {
+      const res = await fetch(`${PROGRAMS_API}/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

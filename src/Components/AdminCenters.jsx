@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-
-const API = "http://localhost:7000/api/centers";
+import { BASE_URL, CENTER_API } from "../config"; // import from config
 
 const AdminCenters = () => {
   const [centers, setCenters] = useState([]);
@@ -9,13 +8,13 @@ const AdminCenters = () => {
   const [image, setImage] = useState(null);
   const [editId, setEditId] = useState(null);
 
-  // ✅ Fetch centers
+  const token = localStorage.getItem("token");
+
+  // Fetch centers
   const fetchCenters = async () => {
     try {
-      const res = await fetch(API, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+      const res = await fetch(CENTER_API, {
+        headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
       if (data.success) setCenters(data.centers);
@@ -28,10 +27,9 @@ const AdminCenters = () => {
     fetchCenters();
   }, []);
 
-  // ✅ Handle Create / Update
+  // Create / Update
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const formData = new FormData();
       formData.append("title", title);
@@ -39,13 +37,11 @@ const AdminCenters = () => {
       if (image) formData.append("image", image);
 
       const method = editId ? "PUT" : "POST";
-      const url = editId ? `${API}/${editId}` : API;
+      const url = editId ? `${CENTER_API}/${editId}` : CENTER_API;
 
       const res = await fetch(url, {
         method,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
 
@@ -61,18 +57,13 @@ const AdminCenters = () => {
     }
   };
 
-  // ✅ Delete center
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this center?")) return;
-
     try {
-      const res = await fetch(`${API}/${id}`, {
+      const res = await fetch(`${CENTER_API}/${id}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-
       const data = await res.json();
       if (data.success) fetchCenters();
       else alert(data.message);
@@ -81,14 +72,12 @@ const AdminCenters = () => {
     }
   };
 
-  // ✅ Edit mode
   const handleEdit = (center) => {
     setEditId(center._id);
     setTitle(center.title);
     setLocation(center.location);
   };
 
-  // ✅ Reset form
   const resetForm = () => {
     setEditId(null);
     setTitle("");
@@ -107,10 +96,7 @@ const AdminCenters = () => {
         <h3 className="text-xl font-semibold mb-4 text-green-300">
           {editId ? "✏️ Edit Center" : "➕ Add New Center"}
         </h3>
-        <form
-          onSubmit={handleSubmit}
-          className="grid grid-cols-1 md:grid-cols-3 gap-4"
-        >
+        <form className="grid grid-cols-1 md:grid-cols-3 gap-4" onSubmit={handleSubmit}>
           <input
             type="text"
             placeholder="Center Title"
@@ -157,13 +143,10 @@ const AdminCenters = () => {
       {/* Centers Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {centers.map((center) => (
-          <div
-            key={center._id}
-            className="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl overflow-hidden shadow-md hover:shadow-green-400/20 transition"
-          >
+          <div key={center._id} className="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl overflow-hidden shadow-md hover:shadow-green-400/20 transition">
             {center.image ? (
               <img
-                src={`http://localhost:7000${center.image}`}
+                src={`${BASE_URL}${center.image}`} // ✅ use BASE_URL
                 alt={center.title}
                 className="w-full h-40 object-cover"
               />
@@ -173,11 +156,8 @@ const AdminCenters = () => {
               </div>
             )}
             <div className="p-4">
-              <h3 className="text-lg font-semibold text-green-300">
-                {center.title}
-              </h3>
+              <h3 className="text-lg font-semibold text-green-300">{center.title}</h3>
               <p className="text-gray-300">{center.location}</p>
-
               <div className="flex gap-3 mt-4">
                 <button
                   onClick={() => handleEdit(center)}

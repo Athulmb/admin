@@ -10,6 +10,8 @@ import AdminUserStories from "./Components/AdminUserStory";
 import AdminPricing from "./Components/AdminPricing";
 import AdminCenters from "./Components/AdminCenters";
 import AdminSports from "./Components/AdminSports";
+import AdminAboutPanel from "./Components/About";
+import AdminBlog from "./Components/AdminBlog";
 
 
 
@@ -37,6 +39,10 @@ const Layout = () => {
           <Route path="/pricing" element={<AdminPricing />} />
           <Route path="/centers" element={<AdminCenters />} />
           <Route path="/sports" element={<AdminSports />} />
+          <Route path="/about" element={<AdminAboutPanel />} />
+          <Route path="/blogs" element={<AdminBlog />} />
+
+
 
 
 

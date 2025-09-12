@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
-const API = "http://localhost:7000/api/services";
+import { SERVICE_API } from "../config"; // updated import
 
 const AdminServices = () => {
   const [services, setServices] = useState([]);
@@ -14,7 +13,7 @@ const AdminServices = () => {
 
   const fetchServices = async () => {
     try {
-      const res = await axios.get(API);
+      const res = await axios.get(SERVICE_API);
       setServices(res.data.data);
     } catch (err) {
       console.error(err);
@@ -39,11 +38,11 @@ const AdminServices = () => {
 
     try {
       if (editId) {
-        await axios.put(`${API}/${editId}`, formData, {
+        await axios.put(`${SERVICE_API}/${editId}`, formData, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } else {
-        await axios.post(API, formData, {
+        await axios.post(SERVICE_API, formData, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
@@ -62,7 +61,7 @@ const AdminServices = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure?")) return;
     try {
-      await axios.delete(`${API}/${id}`, {
+      await axios.delete(`${SERVICE_API}/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchServices();
@@ -75,7 +74,7 @@ const AdminServices = () => {
   const handleEdit = (service) => {
     setTitle(service.title);
     setEditId(service._id);
-    setPreview(service.imagePath ? `http://localhost:7000${service.imagePath}` : null);
+    setPreview(service.imagePath ? `${SERVICE_API.replace("/api/services","")}${service.imagePath}` : null);
   };
 
   return (
@@ -103,7 +102,7 @@ const AdminServices = () => {
           <div key={s._id} className="flex items-center justify-between bg-gray-800 p-4 rounded">
             <div className="flex items-center gap-4">
               {s.imagePath && (
-                <img src={`http://localhost:7000${s.imagePath}`} alt={s.title} className="w-20 h-16 object-cover rounded" />
+                <img src={`${SERVICE_API.replace("/api/services","")}${s.imagePath}`} alt={s.title} className="w-20 h-16 object-cover rounded" />
               )}
               <span className="font-semibold">{s.title}</span>
             </div>

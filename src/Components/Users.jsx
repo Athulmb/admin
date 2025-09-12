@@ -1,6 +1,7 @@
 // src/pages/Admin/Users.jsx
 import React, { useEffect, useState } from "react";
-import API from "../api"; // adjust path if needed
+import { AUTH_API } from "../config"; // adjust the path if needed
+import axios from "axios";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -10,9 +11,13 @@ export default function Users() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await API.get("/auth/users");
-        console.log("API response:", res.data); // 👀 check backend response
-        setUsers(res.data.users || []); // ✅ pick only the users array
+        const res = await axios.get(`${AUTH_API}/users`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        console.log("API response:", res.data);
+        setUsers(res.data.users || []);
       } catch (err) {
         console.error("Fetch users error:", err.response?.data || err.message);
         setError(err.response?.data?.message || "Failed to fetch users");

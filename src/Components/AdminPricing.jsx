@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Eye, Pencil, Trash2, X, Plus } from "lucide-react";
-
-const API = "http://localhost:7000/api/pricing"; // backend endpoint
+import { PRICING_API } from "../config"; // use config.js
 
 const AdminPricing = () => {
   const [pricings, setPricings] = useState([]);
@@ -20,7 +19,7 @@ const AdminPricing = () => {
   // Fetch all pricing plans
   const fetchPricings = async () => {
     try {
-      const res = await fetch(API);
+      const res = await fetch(PRICING_API);
       const data = await res.json();
       setPricings(data.pricings || []);
     } catch (err) {
@@ -73,7 +72,7 @@ const AdminPricing = () => {
         }),
       };
 
-      const res = await fetch(editId ? `${API}/${editId}` : API, options);
+      const res = await fetch(editId ? `${PRICING_API}/${editId}` : PRICING_API, options);
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Error occurred");
 
@@ -101,7 +100,7 @@ const AdminPricing = () => {
     if (!window.confirm("Are you sure you want to delete this pricing?")) return;
 
     try {
-      const res = await fetch(`${API}/${id}`, {
+      const res = await fetch(`${PRICING_API}/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

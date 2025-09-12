@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Eye, Pencil, Trash2, X, Plus } from "lucide-react";
-
-const API = "http://localhost:7000/api/userstory"; // your backend endpoint
-const BASE_URL = "http://localhost:7000";
+import { USERSTORY_API, BASE_URL } from "../config"; // use config.js
 
 const AdminUserStories = () => {
   const [stories, setStories] = useState([]);
@@ -25,7 +23,7 @@ const AdminUserStories = () => {
   // Fetch stories
   const fetchStories = async () => {
     try {
-      const res = await fetch(API);
+      const res = await fetch(USERSTORY_API);
       const data = await res.json();
       setStories(data.stories || []);
     } catch (err) {
@@ -87,7 +85,7 @@ const AdminUserStories = () => {
         body: formData,
       };
 
-      const res = await fetch(editId ? `${API}/${editId}` : API, options);
+      const res = await fetch(editId ? `${USERSTORY_API}/${editId}` : USERSTORY_API, options);
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Error occurred");
 
@@ -126,7 +124,7 @@ const AdminUserStories = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this story?")) return;
     try {
-      const res = await fetch(`${API}/${id}`, {
+      const res = await fetch(`${USERSTORY_API}/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

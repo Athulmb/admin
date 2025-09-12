@@ -12,6 +12,8 @@ const SIDEBAR_ITEMS = [
   { name: "Pricing", icon: DollarSign, color: "#000000", href: "/pricing" },
   { name: "centers", icon: LocateIcon, color: "#000000", href: "/centers" },
   { name: "Sports", icon: Volleyball, color: "#000000", href: "/sports" },
+  {name: "About", icon: ShoppingBag, color: "#000000", href: "/about"},
+  { name: "Blogs", icon: ShoppingCart, color: "#000000", href: "/blogs" },
 
 
 
